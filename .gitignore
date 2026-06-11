@@ -1,0 +1,25 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+*.egg-info/
+dist/
+.env
+.env.local
+
+# SQLite
+*.db
+*.db-shm
+*.db-wal
+
+# Uploads
+backend/uploads/
+
+# Node
+node_modules/
+frontend/dist/
+frontend/.env.local
+
+# OS
+.DS_Store
+Thumbs.db

@@ -1,0 +1,9 @@
+flask==3.1.0
+flask-cors==5.0.0
+sqlalchemy==2.0.36
+mediapipe==0.10.18
+opencv-python==4.10.0.84
+librosa==0.10.2
+openai-whisper==20240930
+openai==1.58.1
+python-dotenv==1.0.1
