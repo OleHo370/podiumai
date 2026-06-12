@@ -12,6 +12,7 @@ from pipeline.extract_frames import extract_frames
 from pipeline.pose_analysis import analyse_pose
 from pipeline.audio_analysis import analyse_audio
 from pipeline.get_metrics import _compute_score
+from coach import get_feedback
 
 upload_bp = Blueprint("upload", __name__)
 
@@ -71,12 +72,16 @@ def upload_video():
 
             overall_score = _compute_score({**visual, **audio})
 
+            yield _sse({"stage": "Generating coaching feedback..."})
+            coaching = get_feedback({**visual, **audio, "overall_score": overall_score})
+
             db = SessionLocal()
             try:
                 session_row = Session(
                     filename=uuid_filename,
                     overall_score=overall_score,
                     duration_seconds=duration_seconds,
+                    coaching=json.dumps(coaching),
                 )
                 db.add(session_row)
                 db.flush()
@@ -110,6 +115,7 @@ def upload_video():
                 "overall_score": overall_score,
                 "metrics": metrics_dict,
                 "transcript": audio["transcript"],
+                "coaching": coaching,
             })
 
         except Exception as exc:

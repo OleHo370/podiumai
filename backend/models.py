@@ -15,6 +15,7 @@ class Session(Base):
     created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
     overall_score = Column(Float, nullable=True)
     duration_seconds = Column(Float, nullable=True)
+    coaching = Column(String, nullable=True)           # JSON string from coach.py
 
     # cascade ensures Metrics row is deleted when Session is deleted
     metrics = relationship(
@@ -31,6 +32,7 @@ class Session(Base):
             "created_at": self.created_at.isoformat(),
             "overall_score": self.overall_score,
             "duration_seconds": self.duration_seconds,
+            "coaching": json.loads(self.coaching) if self.coaching else None,
         }
 
 
