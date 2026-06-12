@@ -4,14 +4,17 @@ export default {
   theme: {
     extend: {
       colors: {
-        podium: {
-          50: "#f0f4ff",
-          100: "#dce6fe",
-          500: "#4f6ef7",
-          600: "#3b55e6",
-          700: "#2d43c8",
-          900: "#1a2580",
+        dark: {
+          900: "#0A0A0F",
+          800: "#0F0F18",
+          700: "#14141F",
+          600: "#1A1A2E",
+          500: "#252538",
         },
+      },
+      fontFamily: {
+        sans: ["Inter", "system-ui", "sans-serif"],
+        mono: ["JetBrains Mono", "ui-monospace", "SFMono-Regular", "monospace"],
       },
     },
   },

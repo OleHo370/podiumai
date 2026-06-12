@@ -1,19 +1,41 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Home from "./pages/Home";
-import SessionDetail from "./pages/SessionDetail";
-import History from "./pages/History";
+import { BrowserRouter, Routes, Route, Link, NavLink } from "react-router-dom";
+import UploadPage from "./pages/UploadPage";
+import ResultsPage from "./pages/ResultsPage";
+import HistoryPage from "./pages/HistoryPage";
 
-// TODO: Add a persistent nav/header component
-// TODO: Add a global error boundary
+function Nav() {
+  return (
+    <header className="sticky top-0 z-50 border-b border-dark-600 bg-dark-800">
+      <div className="max-w-6xl mx-auto px-6 h-14 flex items-center justify-between">
+        <Link to="/" className="font-bold text-lg tracking-tight text-white">
+          Podium<span className="text-blue-500">AI</span>
+        </Link>
+        <nav className="flex items-center gap-6">
+          <NavLink
+            to="/history"
+            className={({ isActive }) =>
+              `text-sm transition-colors ${
+                isActive ? "text-white" : "text-gray-400 hover:text-white"
+              }`
+            }
+          >
+            History
+          </NavLink>
+        </nav>
+      </div>
+    </header>
+  );
+}
 
 export default function App() {
   return (
     <BrowserRouter>
-      <div className="min-h-screen bg-gray-50 text-gray-900">
+      <div className="min-h-screen bg-dark-900 text-slate-100">
+        <Nav />
         <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/sessions" element={<History />} />
-          <Route path="/sessions/:id" element={<SessionDetail />} />
+          <Route path="/" element={<UploadPage />} />
+          <Route path="/results/:id" element={<ResultsPage />} />
+          <Route path="/history" element={<HistoryPage />} />
         </Routes>
       </div>
     </BrowserRouter>
