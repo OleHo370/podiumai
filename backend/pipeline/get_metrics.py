@@ -67,7 +67,7 @@ def _compute_score(metrics: dict[str, Any]) -> float:
     return round(max(0.0, min(100.0, score)), 1)
 
 
-def build_metrics(video_path: str) -> dict[str, Any]:
+def get_metrics(video_path: str) -> dict[str, Any]:
     """
     Run the full analysis pipeline for *video_path*.
 

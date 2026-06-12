@@ -2,12 +2,10 @@
 
 import cv2
 import numpy as np
-import mediapipe as mp
-from typing import Any
+from typing import Any, Optional, Tuple
 
-_mp_pose = mp.solutions.pose
-_mp_hands = mp.solutions.hands
-_mp_face = mp.solutions.face_mesh
+# MediaPipe is imported lazily inside the function to avoid a macOS segfault
+# caused by TFLite native library initialisation at module-load time.
 
 # MediaPipe Pose landmark indices
 _NOSE = 0
@@ -23,7 +21,7 @@ _FRAME_STEP = 5
 _EYE_CONTACT_TOLERANCE = 0.25
 
 
-def analyse_pose(frames: list[np.ndarray], orig_fps: float) -> dict[str, Any]:
+def analyse_pose(frames: list, orig_fps: float) -> dict:
     """
     Run MediaPipe Pose, Hands, and Face Mesh on *frames*.
 
@@ -37,24 +35,25 @@ def analyse_pose(frames: list[np.ndarray], orig_fps: float) -> dict[str, Any]:
             "shoulder_raise": 0.0,
         }
 
+    import mediapipe as mp  # deferred — avoids native-library segfault on import
+
     effective_fps = orig_fps / _FRAME_STEP
 
-    pose_model = _mp_pose.Pose(
+    pose_model = mp.solutions.pose.Pose(
         static_image_mode=False,
         model_complexity=1,
         min_detection_confidence=0.5,
         min_tracking_confidence=0.5,
     )
-    hands_model = _mp_hands.Hands(
+    hands_model = mp.solutions.hands.Hands(
         static_image_mode=False,
         max_num_hands=2,
         min_detection_confidence=0.5,
         min_tracking_confidence=0.5,
     )
-    face_model = _mp_face.FaceMesh(
+    face_model = mp.solutions.face_mesh.FaceMesh(
         static_image_mode=False,
         max_num_faces=1,
-        refine_landmarks=False,
         min_detection_confidence=0.5,
         min_tracking_confidence=0.5,
     )
@@ -62,7 +61,7 @@ def analyse_pose(frames: list[np.ndarray], orig_fps: float) -> dict[str, Any]:
     shoulder_x_px: list[float] = []
     shoulder_y_px: list[float] = []
     # Each entry is (x_px, y_px) or None when wrists not visible
-    wrist_positions: list[tuple[float, float] | None] = []
+    wrist_positions: list = []
     eye_contact_hits = 0
     pose_frame_count = 0
 
